@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Contactos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/editar_contac.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="container">
+
+    <aside class="sidebar">
+        <a href="{{ url_for('inicio') }}">
+            <img src="{{ url_for('static', filename='img/logotipo.png') }}" alt="Logo" class="logo-superior">
+        </a>
+        <nav class="menu">
+            <ul>
+                <a href="{{ url_for('principal') }}"><li><i class="fa-solid fa-address-book"></i> Lista de contactos</li></a>
+                <a href="{{ url_for('agregar_usuario') }}"><li><i class="fa-solid fa-user-plus"></i> Agregar contacto</li></a>
+                <li class="active"><i class="fa-solid fa-pen-to-square"></i> Editar contactos</li>
+                <a href="{{ url_for('reporte_contac') }}"><li><i class="fa-solid fa-chart-bar"></i> Reporte</li></a>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="{{ url_for('cuenta_usuario') }}"><p><i class="fa-solid fa-user"></i> Mi cuenta</p></a>
+            <a href="{{ url_for('logout') }}"><p><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</p></a>
+        </div>
+    </aside>
+
+    <main class="main-content" style="align-items:flex-start; padding:30px;">
+        <div class="contacts-card" style="max-width:100%;">
+
+            <div class="card-header">
+                <div class="header-icon"><i class="fa-regular fa-address-card"></i></div>
+                <div class="header-text">
+                    <h1>Editar contactos</h1>
+                    <p>Busca y selecciona el contacto a modificar</p>
+                </div>
+            </div>
+
+            
+            <form method="GET" action="{{ url_for('editar_contac') }}" class="toolbar">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" name="busqueda" placeholder="Buscar por nombre…" value="{{ busqueda }}">
+                </div>
+                <button type="submit" class="btn-primary"><i class="fa-solid fa-search"></i> Buscar</button>
+                {% if busqueda %}
+                  <a href="{{ url_for('editar_contac') }}" class="btn-secondary"><i class="fa-solid fa-xmark"></i> Limpiar</a>
+                {% endif %}
+            </form>
+
+            <div class="table-header">
+                <span>Nombre</span>
+                <span>Correo</span>
+                <span>Teléfono</span>
+                <span>Categoría</span>
+                <span>Acción</span>
+            </div>
+
+            <div class="table-container">
+            {% if contactos %}
+              {% for c in contactos %}
+                <div class="contact-row">
+                    <div class="col">
+                        <i class="fa-regular fa-circle-user"></i> {{ c.nombre }} {{ c.apellido }}
+                    </div>
+                    <div class="col email-info">
+                        <i class="fa-regular fa-envelope"></i> {{ c.correo }}
+                    </div>
+                    <div class="col">
+                        <i class="fa-solid fa-phone"></i> {{ c.telefono }}
+                    </div>
+                    <div class="col">
+                        <span class="badge badge-cat">{{ c.categoria }}</span>
+                    </div>
+                    <div class="col">
+                        <a href="{{ url_for('editar_formulario', fila=c.fila) }}" class="btn-primary" style="padding:6px 14px;font-size:.85rem;">
+                            <i class="fa-solid fa-pen"></i> Editar
+                        </a>
+                    </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="empty-msg">
+                  <i class="fa-solid fa-inbox"></i>
+                  <p>No hay contactos{% if busqueda %} con "{{ busqueda }}"{% endif %}.</p>
+              </div>
+            {% endif %}
+            </div>
+
+        </div>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio - Gestión de Contactos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inicio.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="triangulo_arriba"></div>
+        <div class="triangulo_abajo"></div>
+        <div class="content">
+            <img src="{{ url_for('static', filename='img/logotipo.png') }}" alt="logo" class="logo">
+            <h1>Gestión de<br>Contactos</h1>
+            <a href="{{ url_for('login') }}" class="btn-link">
+                <button>Iniciar sesión</button>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

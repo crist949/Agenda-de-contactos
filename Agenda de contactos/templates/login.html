@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Gestión de Contactos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<a href="{{ url_for('inicio') }}">
+    <img src="{{ url_for('static', filename='img/logotipo.png') }}" alt="Logo" class="logo-superior">
+</a>
+
+<div class="login-container">
+    <div class="login-card">
+        <h1>Bienvenido de nuevo</h1>
+        <p>Inicia sesión para continuar</p>
+
+        <form method="POST" action="{{ url_for('login') }}" id="formLogin">
+            <label for="usuario">Usuario</label>
+            <input type="text" id="usuario" name="usuario" placeholder="Max_verstappend33" required>
+
+            <label for="contrasena">Contraseña</label>
+            <input type="password" id="contrasena" name="contrasena" placeholder="••••••••" required>
+
+            <button type="submit">Iniciar sesión</button>
+        </form>
+    </div>
+</div>
+
+
+<div id="modalError" class="modal-overlay" {% if not error %}style="display:none;"{% endif %}>
+    <div class="modal-box">
+        <i class="fa-solid fa-circle-xmark" style="font-size:3rem; color:#e74c3c; margin-bottom:12px;"></i>
+        <h2>Credenciales incorrectas</h2>
+        <p>{{ error or 'Usuario o Contraseña incorrecta. Por favor intente de nuevo.' }}</p>
+        <div class="modal-buttons">
+            <button onclick="document.getElementById('modalError').style.display='none'" class="btn-primary">Intentar de nuevo</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Contacto</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/agregar.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="container">
+
+    <aside class="sidebar">
+        <a href="{{ url_for('inicio') }}">
+            <img src="{{ url_for('static', filename='img/logotipo.png') }}" alt="Logo" class="logo-superior">
+        </a>
+        <nav class="menu">
+            <ul>
+                <a href="{{ url_for('principal') }}"><li><i class="fa-solid fa-address-book"></i> Lista de contactos</li></a>
+                <li class="active"><i class="fa-solid fa-user-plus"></i> Agregar contacto</li>
+                <a href="{{ url_for('editar_contac') }}"><li><i class="fa-solid fa-pen-to-square"></i> Editar contactos</li></a>
+                <a href="{{ url_for('reporte_contac') }}"><li><i class="fa-solid fa-chart-bar"></i> Reporte</li></a>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="{{ url_for('cuenta_usuario') }}"><p><i class="fa-solid fa-user"></i> Mi cuenta</p></a>
+            <a href="{{ url_for('logout') }}"><p><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</p></a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="contact-card">
+
+            <div class="card-header">
+                <div class="header-icon">
+                    <a href="{{ url_for('principal') }}" style="color:inherit;"><i class="fa-solid fa-arrow-left"></i></a>
+                </div>
+                <div class="header-text">
+                    <h1>Agregar Contacto</h1>
+                    <p>Completa la información de contacto</p>
+                </div>
+            </div>
+
+          
+            {% if errores %}
+              <div class="errores-box">
+                {% for e in errores %}<p><i class="fa-solid fa-circle-exclamation"></i> {{ e }}</p>{% endfor %}
+              </div>
+            {% endif %}
+
+            <form method="POST" action="{{ url_for('agregar_usuario') }}" id="formAgregar" novalidate>
+
+                <div class="row">
+                    <div class="field">
+                        <label>Nombre *</label>
+                        <input type="text" name="nombre" placeholder="Ej: José" required id="inp-nombre">
+                    </div>
+                    <div class="field">
+                        <label>Apellido</label>
+                        <input type="text" name="apellido" placeholder="Ej: Pérez">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="field">
+                        <label>Teléfono * <small>(8 dígitos)</small></label>
+                        <input type="text" name="telefono" placeholder="Ej: 88001122" maxlength="8" id="inp-tel">
+                    </div>
+                    <div class="field">
+                        <label>Correo electrónico *</label>
+                        <input type="email" name="correo" placeholder="Ej: usuario@dominio.com" id="inp-correo">
+                    </div>
+                </div>
+
+                <div class="field full">
+                    <label>Dirección</label>
+                    <input type="text" name="direccion" placeholder="Ej: San José, Costa Rica">
+                </div>
+
+                
+                <div class="field">
+                    <label>Categoría</label>
+                    <select name="categoria" class="select-field">
+                        {% for cat in categorias %}
+                          <option value="{{ cat }}">{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+               
+                <div class="favorite-box">
+                    <div class="favorite-left">
+                        <div class="heart-box"><i class="fa-regular fa-heart"></i></div>
+                        <div>
+                            <h3>Favorito</h3>
+                            <p>Agregar este contacto a favoritos</p>
+                        </div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" name="favorito">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <button type="button" class="save-btn" onclick="validarYEnviar()">
+                    <i class="fa-regular fa-floppy-disk"></i> Guardar Contacto
+                </button>
+
+            </form>
+        </div>
+    </main>
+</div>
+
+
+<div id="modalError" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+        <i class="fa-solid fa-circle-exclamation modal-icon" style="color:#e74c3c;"></i>
+        <h2>Error de validación</h2>
+        <p id="modalErrorMsg"></p>
+        <div class="modal-buttons">
+            <button onclick="document.getElementById('modalError').style.display='none'" class="btn-primary">Entendido</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function validarYEnviar() {
+    const nombre  = document.getElementById('inp-nombre').value.trim();
+    const tel     = document.getElementById('inp-tel').value.trim();
+    const correo  = document.getElementById('inp-correo').value.trim();
+
+    if (!nombre) {
+        mostrarError('El nombre es obligatorio.');
+        return;
+    }
+    if (!/^\d{8}$/.test(tel)) {
+        mostrarError('El teléfono debe tener exactamente 8 dígitos numéricos.');
+        return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+        mostrarError('El correo electrónico no tiene un formato válido (ej: usuario@dominio.com).');
+        return;
+    }
+    document.getElementById('formAgregar').submit();
+}
+
+function mostrarError(msg) {
+    document.getElementById('modalErrorMsg').textContent = msg;
+    document.getElementById('modalError').style.display = 'flex';
+}
+</script>
+</body>
+</html>

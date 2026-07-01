@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte de Contactos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reporte_contac.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="container">
+
+    <aside class="sidebar">
+        <a href="{{ url_for('inicio') }}">
+            <img src="{{ url_for('static', filename='img/logotipo.png') }}" alt="Logo" class="logo-superior">
+        </a>
+        <nav class="menu">
+            <ul>
+                <a href="{{ url_for('principal') }}"><li><i class="fa-solid fa-address-book"></i> Lista de contactos</li></a>
+                <a href="{{ url_for('agregar_usuario') }}"><li><i class="fa-solid fa-user-plus"></i> Agregar contacto</li></a>
+                <a href="{{ url_for('editar_contac') }}"><li><i class="fa-solid fa-pen-to-square"></i> Editar contactos</li></a>
+                <li class="active"><i class="fa-solid fa-chart-bar"></i> Reporte</li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="{{ url_for('cuenta_usuario') }}"><p><i class="fa-solid fa-user"></i> Mi cuenta</p></a>
+            <a href="{{ url_for('logout') }}"><p><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</p></a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="report-card">
+
+            <div class="card-header">
+                <div class="header-icon">
+                    <a href="{{ url_for('principal') }}" style="color:inherit;"><i class="fa-solid fa-arrow-left"></i></a>
+                </div>
+                <div class="header-text">
+                    <h1>Reporte General</h1>
+                    <p>Estadísticas de la lista de contactos</p>
+                </div>
+            </div>
+
+            <div class="stats-container">
+
+                <div class="stat-box">
+                    <i class="fa-solid fa-users stat-icon"></i>
+                    <h3>Total de contactos</h3>
+                    <div class="stat-value">{{ total }} <span>Contactos</span></div>
+                </div>
+
+                <div class="stat-box stat-fav">
+                    <i class="fa-solid fa-heart stat-icon"></i>
+                    <h3>Contactos favoritos</h3>
+                    <div class="stat-value">{{ favoritos }} <span>Favoritos</span></div>
+                </div>
+
+                <div class="stat-box">
+                    <i class="fa-solid fa-tag stat-icon"></i>
+                    <h3>Por categoría</h3>
+                    <div class="cat-list">
+                        {% for cat, cant in por_categoria.items() %}
+                          <div class="cat-item">
+                              <span class="cat-name">{{ cat }}</span>
+                              <span class="cat-count">{{ cant }}</span>
+                          </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="stat-box">
+                    <i class="fa-solid fa-circle-minus stat-icon"></i>
+                    <h3>Contactos normales</h3>
+                    <div class="stat-value">{{ total - favoritos }} <span>Normales</span></div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+</div>
+</body>
+</html>

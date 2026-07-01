@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Cuenta Usuario</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cuenta_usuario.css') }}">
+</head>
+<body>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Cuenta</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <img src="{{ url_for('static', filename='img/logotipo.png') }}" class="logo-superior" alt="Logo">
+
+        <nav class="menu">
+            <ul>
+                <a href="{{ url_for('principal') }}"><li><img src="{{ url_for('static', filename='img/usuario.png') }}" alt=""> Lista de contactos</li></a>
+                <a href="{{ url_for('agregar_usuario') }}"><li><img src="{{ url_for('static', filename='img/usuario.png') }}" alt=""> Agregar contactos</li></a>
+                <a href="{{ url_for('reporte_contac') }}"><li><img src="{{ url_for('static', filename='img/usuario.png') }}" alt=""> Reporte de contactos</li></a>
+                <a href="{{ url_for('editar_contac') }}"><li><img src="{{ url_for('static', filename='img/usuario.png') }}" alt=""> Editar contactos</li></a>
+            </ul>
+        </nav>
+
+            <div class="sidebar-footer">
+                <a href="{{ url_for('login') }}"><p><i class="fa-solid fa-gear"></i> Configuracion</p></a>
+                <a href="{{ url_for('cuenta_usuario') }}"><p><i class="fa-solid fa-user"></i> Mi cuenta</p></a>
+            </div>
+
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+
+        <div class="account-card">
+
+            <div class="card-header">
+
+                <div class="header-icon">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </div>
+
+                <div class="header-text">
+                    <h1 class="active">Mi cuenta</h1>
+                    <p>Información de contacto propia</p>
+                </div>
+
+            </div>
+
+            <div class="account-content">
+
+                <div class="form-row">
+
+                    <div class="field">
+                        <label>Usuario:</label>
+                        <input type="text" value="Empleado#14.regis" readonly>
+                    </div>
+
+                    <div class="field">
+                        <label>Nombre:</label>
+                        <input type="text" value="Max Emilian" readonly>
+                    </div>
+
+                </div>
+
+                <div class="field">
+                    <label>Apellidos:</label>
+                    <input type="text" value="Antonelli Ramirez" readonly>
+                </div>
+
+                <div class="field email-field">
+                    <label>Correo electrónico:</label>
+                    <input type="text"
+                           value="ramirezantnellimax@gmail.com"
+                           readonly>
+                </div>
+
+                <div class="button-container">
+                    <button class="edit-btn">
+                        <i class="fa-solid fa-pen"></i>
+                        Editar Información
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
+    
+</body>
+</html>

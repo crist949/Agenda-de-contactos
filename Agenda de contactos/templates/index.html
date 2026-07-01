@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Contactos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="container">
+
+
+    <aside class="sidebar">
+        <a href="{{ url_for('inicio') }}">
+            <img src="{{ url_for('static', filename='img/logotipo.png') }}" alt="Logo" class="logo-superior">
+        </a>
+        <nav class="menu">
+            <ul>
+                <li class="active"><i class="fa-solid fa-address-book"></i> Lista de contactos</li>
+                <a href="{{ url_for('agregar_usuario') }}"><li><i class="fa-solid fa-user-plus"></i> Agregar contacto</li></a>
+                <a href="{{ url_for('editar_contac') }}"><li><i class="fa-solid fa-pen-to-square"></i> Editar contactos</li></a>
+                <a href="{{ url_for('reporte_contac') }}"><li><i class="fa-solid fa-chart-bar"></i> Reporte</li></a>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="{{ url_for('cuenta_usuario') }}"><p><i class="fa-solid fa-user"></i> Mi cuenta</p></a>
+            <a href="{{ url_for('logout') }}"><p><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</p></a>
+        </div>
+    </aside>
+
+  
+    <main class="main-content" style="align-items:flex-start; padding:30px;">
+        <div class="contacts-card" style="max-width:100%;">
+
+            <header class="card-header">
+                <div class="header-icon"><i class="fa-solid fa-address-card"></i></div>
+                <div class="header-text">
+                    <h1>Contactos</h1>
+                    <p>Gestionar lista de contactos</p>
+                </div>
+            </header>
+
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for cat, msg in messages %}
+                  <div class="flash flash-{{ cat }}">{{ msg }}</div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+         
+            <form method="GET" action="{{ url_for('principal') }}" class="toolbar">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" name="busqueda" placeholder="Buscar por nombre…" value="{{ busqueda }}">
+                </div>
+                <button type="submit" class="btn-primary"><i class="fa-solid fa-search"></i> Buscar</button>
+                {% if busqueda %}
+                  <a href="{{ url_for('principal') }}" class="btn-secondary">
+                      <i class="fa-solid fa-xmark"></i> Limpiar
+                  </a>
+                {% endif %}
+                <a href="{{ url_for('principal', ordenar='az', busqueda=busqueda) }}" class="btn-secondary">
+                    <i class="fa-solid fa-arrow-down-a-z"></i> A-Z
+                </a>
+            </form>
+
+         
+            <div class="table-container">
+                <div class="table-header">
+                    <span class="col">Nombre completo</span>
+                    <span class="col">Teléfono</span>
+                    <span class="col">Categoría</span>
+                    <span class="col">Tipo</span>
+                    <span class="col">Acciones</span>
+                </div>
+
+                <div class="contact-list">
+                {% if contactos %}
+                  {% for c in contactos %}
+                    <div class="contact-row">
+                        <div class="col user-info">
+                            <i class="fa-regular fa-circle-user"></i>
+                            {{ c.nombre }} {{ c.apellido }}
+                        </div>
+                        <div class="col">
+                            <i class="fa-solid fa-phone"></i> {{ c.telefono }}
+                        </div>
+                        <div class="col">
+                            <span class="badge badge-cat">{{ c.categoria }}</span>
+                        </div>
+                        <div class="col">
+                            {% if c.favorito == 'Sí' %}
+                              <span class="badge badge-fav"><i class="fa-solid fa-heart"></i> Favorito</span>
+                            {% else %}
+                              <span class="badge badge-normal">Normal</span>
+                            {% endif %}
+                        </div>
+                        <div class="col col-actions">
+                            <a href="{{ url_for('detalle', fila=c.fila) }}" class="btn-icon btn-info" title="Más información">
+                                <i class="fa-solid fa-circle-info"></i>
+                            </a>
+                            <a href="{{ url_for('editar_formulario', fila=c.fila) }}" class="btn-icon btn-edit" title="Editar">
+                                <i class="fa-solid fa-pen"></i>
+                            </a>
+                           
+                            <form method="POST" action="{{ url_for('eliminar', fila=c.fila) }}" class="form-inline" onsubmit="return confirmarEliminar(event, this)">
+                                <button type="submit" class="btn-icon btn-delete" title="Eliminar">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  <div class="empty-msg">
+                      <i class="fa-solid fa-inbox"></i>
+                      <p>No se encontraron contactos{% if busqueda %} para "{{ busqueda }}"{% endif %}.</p>
+                  </div>
+                {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+
+<div id="modalEliminar" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+        <i class="fa-solid fa-triangle-exclamation modal-icon"></i>
+        <h2>¿Eliminar contacto?</h2>
+        <p>¿Está seguro/a que desea eliminar al contacto? Esta acción no puede ser revertida.</p>
+        <div class="modal-buttons">
+            <button id="btnConfirmarEliminar" class="btn-danger">Eliminar</button>
+            <button onclick="cerrarModal()" class="btn-secondary">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let formPendiente = null;
+
+function confirmarEliminar(e, form) {
+    e.preventDefault();
+    formPendiente = form;
+    document.getElementById('modalEliminar').style.display = 'flex';
+    return false;
+}
+
+document.getElementById('btnConfirmarEliminar').onclick = function() {
+    if (formPendiente) formPendiente.submit();
+};
+
+function cerrarModal() {
+    document.getElementById('modalEliminar').style.display = 'none';
+    formPendiente = null;
+}
+</script>
+</body>
+</html>

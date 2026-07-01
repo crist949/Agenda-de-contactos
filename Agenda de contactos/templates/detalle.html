@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de Contacto</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/detalle.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="container">
+
+    <aside class="sidebar">
+        <a href="{{ url_for('inicio') }}">
+            <img src="{{ url_for('static', filename='img/logotipo.png') }}" alt="Logo" class="logo-superior">
+        </a>
+        <nav class="menu">
+            <ul>
+                <a href="{{ url_for('principal') }}"><li><i class="fa-solid fa-address-book"></i> Lista de contactos</li></a>
+                <a href="{{ url_for('agregar_usuario') }}"><li><i class="fa-solid fa-user-plus"></i> Agregar contacto</li></a>
+                <a href="{{ url_for('editar_contac') }}"><li><i class="fa-solid fa-pen-to-square"></i> Editar contactos</li></a>
+                <a href="{{ url_for('reporte_contac') }}"><li><i class="fa-solid fa-chart-bar"></i> Reporte</li></a>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="{{ url_for('cuenta_usuario') }}"><p><i class="fa-solid fa-user"></i> Mi cuenta</p></a>
+            <a href="{{ url_for('logout') }}"><p><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</p></a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="contact-card">
+
+            <div class="card-header">
+                <div class="header-icon">
+                    <a href="{{ url_for('principal') }}" style="color:inherit;"><i class="fa-solid fa-arrow-left"></i></a>
+                </div>
+                <div class="header-text">
+                    <h1>Más Información</h1>
+                    <p>Detalle completo del contacto</p>
+                </div>
+            </div>
+
+           
+            <div style="text-align:center; margin-bottom:30px;">
+                <i class="fa-regular fa-circle-user" style="font-size:5rem; color:#726d8f;"></i>
+                <h2 style="margin-top:10px; font-size:1.8rem;">{{ contacto.nombre }} {{ contacto.apellido }}</h2>
+                <span class="badge badge-cat" style="margin-top:6px; display:inline-block;">{{ contacto.categoria }}</span>
+                {% if contacto.favorito == 'Sí' %}
+                  <span class="badge badge-fav" style="margin-top:6px; display:inline-block; margin-left:8px;">
+                      <i class="fa-solid fa-heart"></i> Favorito
+                  </span>
+                {% endif %}
+            </div>
+
+            <div class="detalle-grid">
+                <div class="detalle-item">
+                    <label><i class="fa-solid fa-phone"></i> Teléfono</label>
+                    <p>{{ contacto.telefono }}</p>
+                </div>
+                <div class="detalle-item">
+                    <label><i class="fa-regular fa-envelope"></i> Correo electrónico</label>
+                    <p>{{ contacto.correo }}</p>
+                </div>
+                <div class="detalle-item">
+                    <label><i class="fa-solid fa-location-dot"></i> Dirección</label>
+                    <p>{{ contacto.direccion or '—' }}</p>
+                </div>
+                <div class="detalle-item">
+                    <label><i class="fa-solid fa-tag"></i> Tipo de contacto</label>
+                    <p>{{ 'Favorito' if contacto.favorito == 'Sí' else 'Normal' }}</p>
+                </div>
+                <div class="detalle-item">
+                    <label><i class="fa-solid fa-circle"></i> Estado actual</label>
+                    <p>
+                        <!-- Estado simulado (aleatorio visual) -->
+                        <span class="estado-badge estado-desconectado">
+                            <i class="fa-solid fa-circle" style="font-size:.6rem;"></i> Desconectado
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <a href="{{ url_for('editar_formulario', fila=contacto.fila) }}" class="save-btn" style="text-decoration:none;display:flex;align-items:center;gap:8px;">
+                    <i class="fa-solid fa-pen"></i> Editar contacto
+                </a>
+                <form method="POST" action="{{ url_for('eliminar', fila=contacto.fila) }}" onsubmit="return confirmarEliminar(event, this)">
+                    <button type="submit" class="save-btn" style="background:#c0392b;">
+                        <i class="fa-solid fa-trash"></i> Eliminar contacto
+                    </button>
+                </form>
+                <a href="{{ url_for('principal') }}" class="save-btn" style="background:#555;text-decoration:none;display:flex;align-items:center;gap:8px;">
+                    <i class="fa-solid fa-arrow-left"></i> Volver
+                </a>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+
+<div id="modalEliminar" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+        <i class="fa-solid fa-triangle-exclamation modal-icon"></i>
+        <h2>¿Eliminar contacto?</h2>
+        <p>¿Está seguro/a que desea eliminar al contacto? Esta acción no puede ser revertida.</p>
+        <div class="modal-buttons">
+            <button id="btnConfirmar" class="btn-danger">Eliminar</button>
+            <button onclick="document.getElementById('modalEliminar').style.display='none'" class="btn-secondary">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let formPendiente = null;
+function confirmarEliminar(e, form) {
+    e.preventDefault();
+    formPendiente = form;
+    document.getElementById('modalEliminar').style.display = 'flex';
+    return false;
+}
+document.getElementById('btnConfirmar').onclick = function() {
+    if (formPendiente) formPendiente.submit();
+};
+</script>
+</body>
+</html>
